@@ -1,0 +1,469 @@
+---
+alwaysApply: true
+---
+# Cursor Rules for Amazon Reviews Scraper
+
+## Project Overview
+This is a Python-based Amazon reviews scraper using Playwright for browser automation. The tool extracts product reviews from Amazon with support for various star rating filters and authentication methods.
+
+## Architecture & File Structure
+
+### Core Components
+- `main.py` - Entry point with async main function
+- `scrape.py` - Core scraping logic with AmazonReviewsScraper class
+- `user_interface.py` - CLI argument parsing and interactive input handling
+- `cookie_extractor.py` - Authentication and cookie management
+- `example_results/` - Sample output files (CSV/JSON)
+
+### Key Classes & Functions
+- `AmazonReviewsScraper` - Main scraper class with async methods
+- `Review` - Dataclass for review data structure
+- `UserInterface` - Static methods for configuration handling
+- `STAR_FILTERS` - Dictionary mapping star filter options
+
+## Code Style & Standards
+
+### Python Conventions
+- Use async/await for all browser operations
+- Follow PEP 8 style guidelines
+- Use type hints for function parameters and return values
+- Use dataclasses for structured data (Review)
+- Use pathlib.Path for file operations
+- Use logging instead of print statements for debugging
+
+### Async Programming
+- All browser operations must be async
+- Use `asyncio.sleep()` for delays between requests
+- Handle PlaywrightTimeoutError appropriately
+- Always close browser resources in finally blocks
+
+### Error Handling
+- Use try/except blocks for all browser operations
+- Log warnings for recoverable errors, errors for critical failures
+- Take debug screenshots when operations fail
+- Gracefully handle missing elements with multiple selector attempts
+
+## Browser Automation Best Practices
+
+### Stealth Configuration
+- Always use stealth browser arguments to avoid detection
+- Set realistic user agents and headers
+- Add init scripts to hide automation properties
+- Use proper viewport sizes and locales
+
+### Element Selection
+- Use multiple selector strategies for robustness
+- Check element visibility before interaction
+- Wait for elements to load before extraction
+- Handle dynamic content loading with appropriate waits
+
+### Rate Limiting
+- Add 2-3 second delays between page requests
+- Add 3 second delays between products
+- Implement retry logic for failed requests
+- Respect Amazon's robots.txt guidelines
+
+## Data Handling
+
+### Review Data Structure
+```python
+@dataclass
+class Review:
+    product_id: str
+    product_title: str
+    reviewer: str
+    rating: float
+    date: str
+    verified_purchase: bool
+    content: str
+    helpful_votes: int = 0
+```
+
+### Output Formats
+- CSV: Use csv.DictWriter with UTF-8 encoding
+- JSON: Use json.dump with indent=2 and ensure_ascii=False
+- Include metadata (scrape_date, total_reviews) in JSON output
+
+### File Naming
+- Use descriptive filenames with keywords: `reviews_{keyword}.csv`
+- Replace spaces with underscores in filenames
+- Use consistent naming patterns across output files
+
+## Authentication & Security
+
+### Cookie Management
+- Save cookies as JSON files for reuse
+- Verify login status after loading cookies
+- Handle expired or invalid cookies gracefully
+- Support both manual and automated login methods
+
+### Environment Variables
+- Use environment variables for sensitive credentials
+- Provide fallback to interactive input
+- Never hardcode credentials in source code
+
+## Configuration & CLI
+
+### Command Line Arguments
+- Support both interactive and command-line modes
+- Validate all numeric inputs (max_products, max_pages > 0)
+- Provide helpful error messages for invalid inputs
+- Use argparse with proper help text and examples
+
+### Star Filter Options
+- Support: 1, 2, 3, 4, 5, positive (4-5), critical (1-3), all
+- Map user-friendly names to Amazon's filter parameters
+- Default to 'all' if no filter specified
+
+## Debugging & Monitoring
+
+### Logging
+- Use structured logging with timestamps
+- Log at appropriate levels (INFO, WARNING, ERROR)
+- Include context in log messages (product names, URLs, counts)
+- Log successful operations and failures
+
+### Debug Screenshots
+- Take screenshots when operations fail
+- Use descriptive filenames with timestamps
+- Save debug images for troubleshooting
+- Include page state information in logs
+
+### Error Recovery
+- Implement fallback strategies for failed operations
+- Retry failed requests with exponential backoff
+- Continue processing other products if one fails
+- Provide clear error messages to users
+
+## Testing & Validation
+
+### Input Validation
+- Validate search keywords (non-empty)
+- Validate numeric parameters (positive integers)
+- Validate file paths and permissions
+- Check cookie file existence and format
+
+### Output Validation
+- Verify extracted data completeness
+- Check for required fields in reviews
+- Validate data types and formats
+- Ensure output files are created successfully
+
+## Legal & Ethical Considerations
+
+### Compliance
+- Respect Amazon's Terms of Service
+- Implement reasonable rate limiting
+- Don't overload servers with requests
+- Use data responsibly and ethically
+
+### User Guidelines
+- Provide clear warnings about legal compliance
+- Include rate limiting information
+- Suggest responsible usage patterns
+- Include disclaimer about educational use only
+
+## Development Guidelines
+
+### Adding New Features
+- Maintain backward compatibility
+- Update CLI help text and examples
+- Add appropriate logging and error handling
+- Test with various Amazon product types
+
+### Code Organization
+- Keep related functionality together
+- Use clear, descriptive function and variable names
+- Add docstrings for all public methods
+- Separate concerns (UI, scraping, data handling)
+
+### Performance Optimization
+- Use efficient selectors for element finding
+- Minimize unnecessary page loads
+- Cache frequently accessed data
+- Optimize browser resource usage
+
+## Common Patterns
+
+### Element Extraction
+```python
+# Use multiple selectors for robustness
+selectors = ['selector1', 'selector2', 'selector3']
+for selector in selectors:
+    try:
+        element = page.locator(selector)
+        if await element.count() > 0:
+            # Process element
+            break
+    except:
+        continue
+```
+
+### Error Handling
+```python
+try:
+    # Browser operation
+    await page.goto(url)
+except PlaywrightTimeoutError:
+    logger.warning(f"Timeout loading {url}")
+    await page.screenshot(path="debug_timeout.png")
+except Exception as e:
+    logger.error(f"Unexpected error: {e}")
+```
+
+### Data Extraction
+```python
+# Extract with fallbacks
+text = await element.text_content() if await element.count() > 0 else "default"
+```
+
+## Dependencies
+- playwright: Browser automation
+- asyncio: Async programming
+- dataclasses: Data structures
+- json/csv: File I/O
+- logging: Debugging and monitoring
+- argparse: CLI handling
+- pathlib: File operations
+
+## File Patterns to Follow
+- Use absolute imports
+- Group imports by type (standard, third-party, local)
+- Use consistent indentation (4 spaces)
+- End files with newline
+- Use descriptive variable names
+- Comment complex logic
+- Keep functions focused and small
+# Cursor Rules for Amazon Reviews Scraper
+
+## Project Overview
+This is a Python-based Amazon reviews scraper using Playwright for browser automation. The tool extracts product reviews from Amazon with support for various star rating filters and authentication methods.
+
+## Architecture & File Structure
+
+### Core Components
+- `main.py` - Entry point with async main function
+- `scrape.py` - Core scraping logic with AmazonReviewsScraper class
+- `user_interface.py` - CLI argument parsing and interactive input handling
+- `cookie_extractor.py` - Authentication and cookie management
+- `example_results/` - Sample output files (CSV/JSON)
+
+### Key Classes & Functions
+- `AmazonReviewsScraper` - Main scraper class with async methods
+- `Review` - Dataclass for review data structure
+- `UserInterface` - Static methods for configuration handling
+- `STAR_FILTERS` - Dictionary mapping star filter options
+
+## Code Style & Standards
+
+### Python Conventions
+- Use async/await for all browser operations
+- Follow PEP 8 style guidelines
+- Use type hints for function parameters and return values
+- Use dataclasses for structured data (Review)
+- Use pathlib.Path for file operations
+- Use logging instead of print statements for debugging
+
+### Async Programming
+- All browser operations must be async
+- Use `asyncio.sleep()` for delays between requests
+- Handle PlaywrightTimeoutError appropriately
+- Always close browser resources in finally blocks
+
+### Error Handling
+- Use try/except blocks for all browser operations
+- Log warnings for recoverable errors, errors for critical failures
+- Take debug screenshots when operations fail
+- Gracefully handle missing elements with multiple selector attempts
+
+## Browser Automation Best Practices
+
+### Stealth Configuration
+- Always use stealth browser arguments to avoid detection
+- Set realistic user agents and headers
+- Add init scripts to hide automation properties
+- Use proper viewport sizes and locales
+
+### Element Selection
+- Use multiple selector strategies for robustness
+- Check element visibility before interaction
+- Wait for elements to load before extraction
+- Handle dynamic content loading with appropriate waits
+
+### Rate Limiting
+- Add 2-3 second delays between page requests
+- Add 3 second delays between products
+- Implement retry logic for failed requests
+- Respect Amazon's robots.txt guidelines
+
+## Data Handling
+
+### Review Data Structure
+```python
+@dataclass
+class Review:
+    product_id: str
+    product_title: str
+    reviewer: str
+    rating: float
+    date: str
+    verified_purchase: bool
+    content: str
+    helpful_votes: int = 0
+```
+
+### Output Formats
+- CSV: Use csv.DictWriter with UTF-8 encoding
+- JSON: Use json.dump with indent=2 and ensure_ascii=False
+- Include metadata (scrape_date, total_reviews) in JSON output
+
+### File Naming
+- Use descriptive filenames with keywords: `reviews_{keyword}.csv`
+- Replace spaces with underscores in filenames
+- Use consistent naming patterns across output files
+
+## Authentication & Security
+
+### Cookie Management
+- Save cookies as JSON files for reuse
+- Verify login status after loading cookies
+- Handle expired or invalid cookies gracefully
+- Support both manual and automated login methods
+
+### Environment Variables
+- Use environment variables for sensitive credentials
+- Provide fallback to interactive input
+- Never hardcode credentials in source code
+
+## Configuration & CLI
+
+### Command Line Arguments
+- Support both interactive and command-line modes
+- Validate all numeric inputs (max_products, max_pages > 0)
+- Provide helpful error messages for invalid inputs
+- Use argparse with proper help text and examples
+
+### Star Filter Options
+- Support: 1, 2, 3, 4, 5, positive (4-5), critical (1-3), all
+- Map user-friendly names to Amazon's filter parameters
+- Default to 'all' if no filter specified
+
+## Debugging & Monitoring
+
+### Logging
+- Use structured logging with timestamps
+- Log at appropriate levels (INFO, WARNING, ERROR)
+- Include context in log messages (product names, URLs, counts)
+- Log successful operations and failures
+
+### Debug Screenshots
+- Take screenshots when operations fail
+- Use descriptive filenames with timestamps
+- Save debug images for troubleshooting
+- Include page state information in logs
+
+### Error Recovery
+- Implement fallback strategies for failed operations
+- Retry failed requests with exponential backoff
+- Continue processing other products if one fails
+- Provide clear error messages to users
+
+## Testing & Validation
+
+### Input Validation
+- Validate search keywords (non-empty)
+- Validate numeric parameters (positive integers)
+- Validate file paths and permissions
+- Check cookie file existence and format
+
+### Output Validation
+- Verify extracted data completeness
+- Check for required fields in reviews
+- Validate data types and formats
+- Ensure output files are created successfully
+
+## Legal & Ethical Considerations
+
+### Compliance
+- Respect Amazon's Terms of Service
+- Implement reasonable rate limiting
+- Don't overload servers with requests
+- Use data responsibly and ethically
+
+### User Guidelines
+- Provide clear warnings about legal compliance
+- Include rate limiting information
+- Suggest responsible usage patterns
+- Include disclaimer about educational use only
+
+## Development Guidelines
+
+### Adding New Features
+- Maintain backward compatibility
+- Update CLI help text and examples
+- Add appropriate logging and error handling
+- Test with various Amazon product types
+
+### Code Organization
+- Keep related functionality together
+- Use clear, descriptive function and variable names
+- Add docstrings for all public methods
+- Separate concerns (UI, scraping, data handling)
+
+### Performance Optimization
+- Use efficient selectors for element finding
+- Minimize unnecessary page loads
+- Cache frequently accessed data
+- Optimize browser resource usage
+
+## Common Patterns
+
+### Element Extraction
+```python
+# Use multiple selectors for robustness
+selectors = ['selector1', 'selector2', 'selector3']
+for selector in selectors:
+    try:
+        element = page.locator(selector)
+        if await element.count() > 0:
+            # Process element
+            break
+    except:
+        continue
+```
+
+### Error Handling
+```python
+try:
+    # Browser operation
+    await page.goto(url)
+except PlaywrightTimeoutError:
+    logger.warning(f"Timeout loading {url}")
+    await page.screenshot(path="debug_timeout.png")
+except Exception as e:
+    logger.error(f"Unexpected error: {e}")
+```
+
+### Data Extraction
+```python
+# Extract with fallbacks
+text = await element.text_content() if await element.count() > 0 else "default"
+```
+
+## Dependencies
+- playwright: Browser automation
+- asyncio: Async programming
+- dataclasses: Data structures
+- json/csv: File I/O
+- logging: Debugging and monitoring
+- argparse: CLI handling
+- pathlib: File operations
+
+## File Patterns to Follow
+- Use absolute imports
+- Group imports by type (standard, third-party, local)
+- Use consistent indentation (4 spaces)
+- End files with newline
+- Use descriptive variable names
+- Comment complex logic
+- Keep functions focused and small
