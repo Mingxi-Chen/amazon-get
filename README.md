@@ -30,12 +30,7 @@ A robust Python tool for scraping product reviews from Amazon using Playwright. 
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Install Playwright browsers**:
+3. **Install Playwright browsers**:
    ```bash
    playwright install chromium
    ```
