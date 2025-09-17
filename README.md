@@ -213,7 +213,7 @@ The scraper automatically creates debug screenshots when issues occur:
 ## File Structure
 
 ```
-scrape-b/
+amazon-get/
 ├── main.py                 # Main entry point
 ├── scrape.py              # Core scraping logic
 ├── user_interface.py      # CLI and interactive input handling
