@@ -2,7 +2,7 @@
 
 A robust Python tool for scraping product reviews from Amazon using Playwright. This scraper can extract reviews from multiple products based on search keywords, with support for various star rating filters and both manual and automated login methods.
 
-##具体结果看exmaple_results文档
+## 具体结果看exmaple_results文档
 
 ## Features
 
